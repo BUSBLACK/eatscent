@@ -1,0 +1,8 @@
+.bg {
+    background:url("img/login1.jpg") no-repeat center;
+    background-size:contain;
+}
+.fontsize{
+    font-size: x-small;
+    color: aqua;
+}
