@@ -39,8 +39,14 @@ public class LoginControllerImpl implements LoginController {
      */
     @RequestMapping("index")
     public String Login(){
-        System.out.println("index");
         return "Login";
+    }
+    /**
+     * 测试页面
+     */
+    @RequestMapping("test")
+    public String Hello(){
+        return "index";
     }
     /**
      * 用户登录

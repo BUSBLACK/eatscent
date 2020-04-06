@@ -8,4 +8,5 @@ public interface LoginController {
     List<User> getLogin(User user);
     String getLoginById(int id);
     void insertByPrimaryKey (int user);
+    public String Hello();
 }

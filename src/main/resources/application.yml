@@ -36,6 +36,7 @@ spring:
     username: cc
     password: 123456
     databaseName: eat
+
   thymeleaf:
     cache: false
     prefix: classpath:templates/
@@ -43,6 +44,12 @@ spring:
     suffix: .html
     encoding: utf-8
     mode: HTML5
+
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5727
+    username: guest
+    password: guest
 
 
 mybatis:
