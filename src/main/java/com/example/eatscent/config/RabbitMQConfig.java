@@ -53,46 +53,47 @@ public class RabbitMQConfig {
         }
         return conn;
     }
-    @Bean
-    /**
-     * rabbitmq连接.uri方式
-     * */
-    public Connection rabbitMQ_Config_Uri(){
-        ConnectionFactory factory = new ConnectionFactory();
-        Connection conn  = null;
-        try {
-            factory.setUri("amqp://"+username+":"+password+"@"+host+":"+port+"/virtualHost");
-            try {
-                conn = factory.newConnection();
-            } catch (IOException e) {
-                logger.error("创建MQ连接失败！",e);
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                logger.error("创建MQ连接失败！",e);
-                e.printStackTrace();
-            }
-        } catch (URISyntaxException e) {
-            logger.error("创建MQ连接失败！",e);
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            logger.error("创建MQ连接失败！",e);
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            logger.error("创建MQ连接失败！",e);
-            e.printStackTrace();
-        }
 
-
-        return  conn;
-    }
+    //rabbitmq连接.uri方式
+//     @Bean
+//    public Connection rabbitMQ_Config_Uri(){
+//        ConnectionFactory factory = new ConnectionFactory();
+//        Connection conn  = null;
+//        try {
+//            factory.setUri("amqp://guest:guest@127.0.0.1:5672/");//"amqp://"+username+":"+password+"@"+host+":"+port+"/"
+//            try {
+//                conn = factory.newConnection();
+//            } catch (IOException e) {
+//                logger.error("创建MQ连接失败！",e);
+//                e.printStackTrace();
+//            } catch (TimeoutException e) {
+//                logger.error("创建MQ连接失败！",e);
+//                e.printStackTrace();
+//            }
+//        } catch (URISyntaxException e) {
+//            logger.error("创建MQ连接失败！",e);
+//            e.printStackTrace();
+//        } catch (NoSuchAlgorithmException e) {
+//            logger.error("创建MQ连接失败！",e);
+//            e.printStackTrace();
+//        } catch (KeyManagementException e) {
+//            logger.error("创建MQ连接失败！",e);
+//            e.printStackTrace();
+//        }
+//        return  conn;
+//    }
     /**
      * direct类型交换机生产者
      * */
     @Bean
     public boolean direct_MQ_Producer(String excahngeName, String exchangeType,String Queue,String Binding,byte[] array) throws Exception{
-
         boolean flag = false;
-        Connection con = rabbitMQ_Config();
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("127.0.0.1");
+        factory.setPort(5672);
+        factory.setUsername("guest");
+        factory.setPassword("guest");
+        Connection con = factory.newConnection();
         //创建通道
         Channel channel = con.createChannel();
         try {
@@ -208,5 +209,21 @@ public class RabbitMQConfig {
      * */
     @Bean
     public void fanout_MQ_Consumer(){
+    }
+    public static void main(String[] args){
+        String send = "整合PabbitMQ3";
+        String[] recv = {""};
+        RabbitMQConfig rabbitMQConfig = new RabbitMQConfig();
+        try {
+            rabbitMQConfig.direct_MQ_Producer("Test_direct","direct","direct_Queue","Test_direct",send.getBytes());
+            recv = rabbitMQConfig.direct_MQ_Consumer("direct_Queue");
+            System.out.println(recv);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
