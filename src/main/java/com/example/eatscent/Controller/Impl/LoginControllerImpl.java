@@ -46,7 +46,7 @@ public class LoginControllerImpl implements LoginController {
      */
     @RequestMapping("test")
     public String Hello(){
-        return "index";
+        return "Login";
     }
     /**
      * 用户登录

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class RedisConfig {
+
     Logger logger = LoggerFactory.getLogger(RedisConfig.class);
     @Autowired
     private LettuceConnectionFactory factory;
