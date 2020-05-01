@@ -36,7 +36,7 @@ public class RecvEmail {
      * @return
      */
     @Bean
-    public HashMap recvEmail() {
+    public HashMap recvEmail_All() {
         HashMap map = new HashMap();
         Properties props = new Properties();
         props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");//ssl加密,jdk1.8无法使用
@@ -109,22 +109,19 @@ public class RecvEmail {
             conName = true;
         }
         //判断part类型
-        if (part.isMimeType("text/plain") && !conName) {
+        if (part.isMimeType("text/*") && !conName) {//纯文本或HTNL类型
             message = (String) part.getContent();
             return message;
-        } else if (part.isMimeType("text/html") && !conName) {
-            message = (String) part.getContent();
-            return message;
-        } else if (part.isMimeType("multipart/*")) {
-            Multipart multipart = (Multipart) part.getContent();
-            int counts = multipart.getCount();
+        } else if (part.isMimeType("multipart/*")) {//复杂类型，例如图片、附件等
+            Multipart multipart = (Multipart) part.getContent();//获取邮件中复杂类型的数据
+            int counts = multipart.getCount();//数据数量
             for (int i = 0; i < counts; i++) {
                 //递归获取数据
                 getFile(multipart.getBodyPart(i));
                 //附件可能是截图或上传的(图片或其他数据)
                 if (multipart.getBodyPart(i).getDisposition() != null) {
                     //附件为截图
-                    if (multipart.getBodyPart(i).isMimeType("image/*")) {
+                    if (multipart.getBodyPart(i).isMimeType("image/*")) {//图片附件
                         InputStream is = multipart.getBodyPart(i)
                                 .getInputStream();
                         String name = multipart.getBodyPart(i).getFileName();
@@ -136,8 +133,8 @@ public class RecvEmail {
                             //上传图片
                             fileName = name;
                         }
+                        //下载附件
                         FileOutputStream fos = new FileOutputStream("D:\\WorkApp\\File\\" + fileName);
-
                         int len = 0;
                         byte[] bys = new byte[1024];
                         while ((len = is.read(bys)) != -1) {
@@ -163,14 +160,14 @@ public class RecvEmail {
                     }
                 }
             }
-        } else if (part.isMimeType("message/rfc822")) {
+        } else if (part.isMimeType("message/rfc822")) {//多重附件，递归解析
             getFile((Part) part.getContent());
         }
         return message;
     }
 
     public static void main(String[] args){
-        HashMap messages = new RecvEmail().recvEmail();
+        HashMap messages = new RecvEmail().recvEmail_All();
         System.out.println(1111);
     }
 
