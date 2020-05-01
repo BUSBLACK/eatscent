@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.mail.*;
 import javax.mail.search.FlagTerm;
 import java.io.*;
+import java.util.HashMap;
 import java.util.Properties;
 
 import static java.lang.Thread.sleep;
@@ -35,7 +36,8 @@ public class RecvEmail {
      * @return
      */
     @Bean
-    public Message[] recvEmail() {
+    public HashMap recvEmail() {
+        HashMap map = new HashMap();
         Properties props = new Properties();
         props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");//ssl加密,jdk1.8无法使用
         props.setProperty("mail.imap.socketFactory.fallback", "false");//是否回执
@@ -53,19 +55,27 @@ public class RecvEmail {
             FlagTerm ft = new FlagTerm(new Flags(Flags.Flag.SEEN), false);//false代表未读，true代表已读
             messages = folder.search(ft);
             logger.info("共有" + messages.length + "新邮件");
-            for (int i = 0; i < 1; i++) {
+            map.put("num",messages.length);
+            for (int i = 0; i < messages.length; i++) {
                 sleep(1000);
                 String subject = messages[i].getSubject();//获取邮件主题
                 String from = (messages[i].getFrom()[0]).toString();//获取发送人
                 String content = messages[i].getContent().toString();//获取内容需要进一步解析
                 String size = messages[i].getSize() * 1024 + "KB";
                 logger.info("第 " + (i + 1) + " 封邮件的发件人地址---->>>" + from);
+                map.put("from"+i,from);
                 logger.info("第 " + (i + 1) + " 封邮件的主题--->>>" + subject);
+                map.put("subject"+i,subject);
                 logger.info("第 " + (i + 1) + " 封邮件是否已读--->>>" + messages[i].getFlags().contains(Flags.Flag.SEEN));
+                map.put("SEEN"+i,messages[i].getFlags().contains(Flags.Flag.SEEN));
                 logger.info("第 " + (i + 1) + " 封邮件是否需要回执--->>>" + String.valueOf(messages[i].getHeader("Disposition-Notification-To") != null ? true : false));
+                map.put("Disposition"+i,String.valueOf(messages[i].getHeader("Disposition-Notification-To") != null ? true : false));
                 logger.info("第 " + (i + 1) + " 封邮件的大小--->>>" + size);
+                map.put("size"+i,size);
                 logger.info("第 " + (i + 1) + " 封邮件发送时间--->>>" + messages[i].getSentDate());
+                map.put("SentDate"+i,messages[i].getSentDate());
                 logger.info("第 " + (i + 1) + " 封邮件内容--->>>" + getFile(messages[i]));
+                map.put("file"+i,getFile(messages[i]));
                 logger.info("-----------------------------------------");
                 messages[i].setFlag(Flags.Flag.SEEN, true);//imap读取后邮件状态变为已读
                 //messages[i].setFlag(Flags.Flag.DELETED,true);//删除邮件
@@ -82,7 +92,7 @@ public class RecvEmail {
             e.printStackTrace();
         }
 
-        return messages;
+        return map;
     }
 
     /**
@@ -160,7 +170,7 @@ public class RecvEmail {
     }
 
     public static void main(String[] args){
-        Message[] messages = new RecvEmail().recvEmail();
+        HashMap messages = new RecvEmail().recvEmail();
         System.out.println(1111);
     }
 
