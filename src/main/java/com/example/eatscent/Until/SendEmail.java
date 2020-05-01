@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -13,9 +13,10 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Properties;
 @Configuration
-@EnableAspectJAutoProxy
+@EnableTransactionManagement
 public class SendEmail {
     Logger logger = LoggerFactory.getLogger(SendEmail.class);
     private final String WY = "smtp.163.com";//网易邮箱服务器
