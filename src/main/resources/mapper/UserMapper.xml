@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.eatscent.Dao.UserMapper">
+<mapper namespace="com.example.eatscent.dao.UserMapper">
     <resultMap id="UserResultMap" type="com.example.eatscent.entity.User">
         <id column="UserID" jdbcType="INTEGER" property="UserID"/>
         <result column="UserName" jdbcType="VARCHAR" property="UserName"/>

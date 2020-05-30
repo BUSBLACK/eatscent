@@ -2,6 +2,7 @@ package com.example.eatscent.entity;
 
 import java.util.Objects;
 
+@SuppressWarnings("ALL")
 public class User {
     private int UserID;
     private String UserName;
@@ -79,9 +80,15 @@ public class User {
     }
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        if (!super.equals(object)) {
+            return false;
+        }
         User user = (User) object;
         return UserID == user.UserID &&
                 java.util.Objects.equals(UserName, user.UserName) &&

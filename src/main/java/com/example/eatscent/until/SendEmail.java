@@ -1,10 +1,13 @@
-package com.example.eatscent.Until;
+package com.example.eatscent.until;
 
-import com.example.eatscent.Until.info.Email_info;
+import com.example.eatscent.aop.EmailAdvice;
+import com.example.eatscent.until.info.Email_info;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.activation.DataHandler;
@@ -15,7 +18,9 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Properties;
+@SuppressWarnings("ALL")
 @Configuration
+@EnableAspectJAutoProxy
 @EnableTransactionManagement
 public class SendEmail {
     Logger logger = LoggerFactory.getLogger(SendEmail.class);
@@ -27,12 +32,22 @@ public class SendEmail {
     private final String QQ_PORT = "465"; //QQ服务器端口
     private final String QQ_USER = "*******************";//发送方邮箱
     private final String QQ_PASSWORD = "*******************";//发送发授权码
+
+    /**
+     * 发送邮件AOP
+     * @return
+     */
+    @Bean
+    public EmailAdvice emailAdvice(){
+        return new EmailAdvice();
+    }
     /**
      * 邮件发送，文本
      * @param email
      * @return
      */
     @Bean
+    @Lazy
     public boolean Email_Send_Text(Email_info email){
         Properties properties = new Properties();
         //指定连接邮件服务器的名称
@@ -73,9 +88,7 @@ public class SendEmail {
             //发送邮件
             transport.sendMessage(mimeMessage,new Address[] {new InternetAddress(email.getRecvEmail())});
             transport.close();
-            logger.info("发送邮件成功！");
         } catch (MessagingException e) {
-            logger.error("发送邮件失败"+e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -88,6 +101,7 @@ public class SendEmail {
      * @return
      */
     @Bean
+    @Lazy
     public boolean Email_Send_HTML(Email_info email){
         Properties properties = new Properties();
         //指定连接邮件服务器的名称
@@ -128,7 +142,7 @@ public class SendEmail {
             multipart.addBodyPart(html);
             //获取附件路径
             String attachFileNames = email.getFilePath()+File.separator+email.getFileName();
-            if (attachFileNames != null && !attachFileNames.equals("")) {
+            if (attachFileNames != null && !"".equals(attachFileNames)) {
 
                 // 根据附件文件创建文件数据源
                 File file = new File(attachFileNames);
@@ -158,24 +172,10 @@ public class SendEmail {
             //发送邮件
             transport.sendMessage(mimeMessage,new Address[] {new InternetAddress(email.getRecvEmail())});
             transport.close();
-            logger.info("发送邮件成功！");
         } catch (MessagingException e) {
-            logger.error("发送邮件失败"+e.getMessage());
             e.printStackTrace();
             return false;
         }
         return true;
-    }
-
-
-    public static void main (String[] args){
-        Email_info email_info = new Email_info();
-        email_info.setEmailMessage("llll<br/>222222");
-        email_info.setTtl("邮件测试");
-        email_info.setRecvEmail("***************@qq.com");
-        email_info.setFileName("2019java面试题.pdf");
-        email_info.setFilePath("D:\\BaiduNetdiskDownload");
-        boolean fa = new SendEmail().Email_Send_HTML(email_info);
-        System.out.println(fa);
     }
 }

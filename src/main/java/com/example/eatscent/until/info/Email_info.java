@@ -1,5 +1,8 @@
-package com.example.eatscent.Until.info;
+package com.example.eatscent.until.info;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Email_info {
     private String recvEmail;//接收方邮箱
     private String ttl;//邮件主题

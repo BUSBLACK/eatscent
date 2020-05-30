@@ -1,4 +1,4 @@
-package com.example.eatscent.Service;
+package com.example.eatscent.service;
 
 import com.example.eatscent.entity.User;
 
@@ -8,4 +8,11 @@ public interface LoginService {
     List<User> login(User user);
     User selectById(int id);
     void insertByPrimaryKey (User user);
+
+    /**
+     * 测试AOP
+     * @param id
+     * @return
+     */
+    String aopTest(int id);
 }

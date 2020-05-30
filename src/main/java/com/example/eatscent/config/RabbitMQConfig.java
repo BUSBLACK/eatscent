@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+@SuppressWarnings("ALL")
 @Configuration
 @EnableTransactionManagement
 public class RabbitMQConfig {

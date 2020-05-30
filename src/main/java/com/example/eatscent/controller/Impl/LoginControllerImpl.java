@@ -1,7 +1,9 @@
-package com.example.eatscent.Controller.Impl;
+package com.example.eatscent.controller.Impl;
 
-import com.example.eatscent.Controller.LoginController;
-import com.example.eatscent.Service.LoginService;
+import com.example.eatscent.controller.LoginController;
+import com.example.eatscent.service.LoginService;
+import com.example.eatscent.until.SendEmail;
+import com.example.eatscent.until.info.Email_info;
 import com.example.eatscent.config.MongoDBConfig;
 import com.example.eatscent.config.RedisConfig;
 import com.example.eatscent.entity.User;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+@SuppressWarnings("ALL")
 @Controller
 @RequestMapping("/login")
 public class LoginControllerImpl implements LoginController {
@@ -32,6 +35,12 @@ public class LoginControllerImpl implements LoginController {
     MongoClient mongoClient;
     @Autowired
     MongoTemplate mongoTemplate;
+    @Autowired
+    SendEmail sendEmail;
+    @Autowired
+    Email_info email_info;
+
+
 
     /**
      * 用户登录页面
@@ -45,6 +54,7 @@ public class LoginControllerImpl implements LoginController {
      * 测试页面
      */
     @RequestMapping("test")
+    @Override
     public String Hello(){
         return "Login";
     }
@@ -54,6 +64,7 @@ public class LoginControllerImpl implements LoginController {
      * @return
      */
     @RequestMapping("getlogin/{id}")
+    @Override
     public List<User> getLogin(User user) {
         user.setUserName("Black");
         user.setPassword("123456");
@@ -66,10 +77,9 @@ public class LoginControllerImpl implements LoginController {
      * @return
      */
     @RequestMapping("byId/{id}")
+    @Override
     public String getLoginById(@PathVariable int id) {
-        String str = "6666";
-        System.out.println("创建成功");
-        return str;
+        return loginService.aopTest(id);
     }
 
     /**
@@ -77,6 +87,7 @@ public class LoginControllerImpl implements LoginController {
      * @param id
      */
     @RequestMapping("insert/{id}")
+    @Override
     public void insertByPrimaryKey(@PathVariable int id){
         User user = new User();
         user.setPassword("123456");

@@ -1,4 +1,4 @@
-package com.example.eatscent.Dao;
+package com.example.eatscent.dao;
 
 import com.example.eatscent.entity.User;
 import org.apache.ibatis.annotations.Result;
@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author 11397
+ */
+@SuppressWarnings("ALL")
 @Repository
 public interface UserMapper {
     /**

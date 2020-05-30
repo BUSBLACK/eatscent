@@ -54,6 +54,12 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 			<version>2.1.7.RELEASE</version>
 		</dependency>
+		<!-- 引入AOP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>2.1.7.RELEASE</version>
+		</dependency>
 		<!--MySql依赖-->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -153,6 +159,8 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
+
+
 
 
 	</dependencies>
