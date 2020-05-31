@@ -35,10 +35,6 @@ public class LoginControllerImpl implements LoginController {
     MongoClient mongoClient;
     @Autowired
     MongoTemplate mongoTemplate;
-    @Autowired
-    SendEmail sendEmail;
-    @Autowired
-    Email_info email_info;
 
 
 

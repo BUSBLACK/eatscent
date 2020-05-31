@@ -1,11 +1,8 @@
-package com.example.eatscent.Until;
+package com.example.eatscent.until;
 
-import com.example.eatscent.Until.info.Email_info;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.stereotype.Component;
 
 import javax.mail.*;
 import javax.mail.search.FlagTerm;
@@ -15,8 +12,8 @@ import java.util.Properties;
 
 import static java.lang.Thread.sleep;
 
-@Configuration
-@EnableTransactionManagement
+@SuppressWarnings("ALL")
+@Component
 public class RecvEmail {
     Logger logger = LoggerFactory.getLogger(RecvEmail.class);
     private final String WY = "pop3.163.com";//网易邮箱服务器
@@ -35,32 +32,43 @@ public class RecvEmail {
      *
      * @return
      */
-    @Bean
     public HashMap recvEmail_All() {
         HashMap map = new HashMap();
         Properties props = new Properties();
-        props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");//ssl加密,jdk1.8无法使用
-        props.setProperty("mail.imap.socketFactory.fallback", "false");//是否回执
-        props.setProperty("mail.transport.protocol", QQ_XY); // 使用的协议
+        //ssl加密,jdk1.8无法使用
+        props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        //是否回执
+        props.setProperty("mail.imap.socketFactory.fallback", "false");
+        // 使用的协议
+        props.setProperty("mail.transport.protocol", QQ_XY);
         props.setProperty("mail.imap.port", QQ_PORT);
         props.setProperty("mail.imap.socketFactory.port", QQ_PORT);
-        Message[] messages = null;//存放邮件信息
-        Session session = Session.getDefaultInstance(props);//创建会话
+        //存放邮件信息
+        Message[] messages = null;
+        //创建会话
+        Session session = Session.getDefaultInstance(props);
         try {
-            Store store = session.getStore(QQ_XY);//存储对象
-            store.connect(QQ, QQ_USER, QQ_PASSWORD);//登录认证
-            Folder folder = store.getFolder("inbox");//获取用户的邮件账户
-            folder.open(Folder.READ_WRITE);//设置对邮件账户的访问权限
-
-            FlagTerm ft = new FlagTerm(new Flags(Flags.Flag.SEEN), false);//false代表未读，true代表已读
+            Store store = session.getStore(QQ_XY);
+            //存储对象
+            store.connect(QQ, QQ_USER, QQ_PASSWORD);
+            //登录认证
+            //获取用户的邮件账户
+            Folder folder = store.getFolder("inbox");
+            //设置对邮件账户的访问权限
+            folder.open(Folder.READ_WRITE);
+            //false代表未读，true代表已读
+            FlagTerm ft = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
             messages = folder.search(ft);
             logger.info("共有" + messages.length + "新邮件");
             map.put("num",messages.length);
             for (int i = 0; i < messages.length; i++) {
                 sleep(1000);
-                String subject = messages[i].getSubject();//获取邮件主题
-                String from = (messages[i].getFrom()[0]).toString();//获取发送人
-                String content = messages[i].getContent().toString();//获取内容需要进一步解析
+                //获取邮件主题
+                String subject = messages[i].getSubject();
+                //获取发送人
+                String from = (messages[i].getFrom()[0]).toString();
+                //获取内容需要进一步解析
+                String content = messages[i].getContent().toString();
                 String size = messages[i].getSize() * 1024 + "KB";
                 logger.info("第 " + (i + 1) + " 封邮件的发件人地址---->>>" + from);
                 map.put("from"+i,from);
@@ -77,8 +85,10 @@ public class RecvEmail {
                 logger.info("第 " + (i + 1) + " 封邮件内容--->>>" + getFile(messages[i]));
                 map.put("file"+i,getFile(messages[i]));
                 logger.info("-----------------------------------------");
-                messages[i].setFlag(Flags.Flag.SEEN, true);//imap读取后邮件状态变为已读
-                //messages[i].setFlag(Flags.Flag.DELETED,true);//删除邮件
+                //imap读取后邮件状态变为已读
+                messages[i].setFlag(Flags.Flag.SEEN, true);
+                //删除邮件
+                //messages[i].setFlag(Flags.Flag.DELETED,true);
             }
             folder.close(false);
             store.close();
@@ -109,19 +119,24 @@ public class RecvEmail {
             conName = true;
         }
         //判断part类型
-        if (part.isMimeType("text/*") && !conName) {//纯文本或HTNL类型
+        //纯文本或HTNL类型
+        if (part.isMimeType("text/*") && !conName) {
             message = (String) part.getContent();
             return message;
-        } else if (part.isMimeType("multipart/*")) {//复杂类型，例如图片、附件等
-            Multipart multipart = (Multipart) part.getContent();//获取邮件中复杂类型的数据
-            int counts = multipart.getCount();//数据数量
+            //复杂类型，例如图片、附件等
+        } else if (part.isMimeType("multipart/*")) {
+            //获取邮件中复杂类型的数据
+            Multipart multipart = (Multipart) part.getContent();
+            //数据数量
+            int counts = multipart.getCount();
             for (int i = 0; i < counts; i++) {
                 //递归获取数据
                 getFile(multipart.getBodyPart(i));
                 //附件可能是截图或上传的(图片或其他数据)
                 if (multipart.getBodyPart(i).getDisposition() != null) {
                     //附件为截图
-                    if (multipart.getBodyPart(i).isMimeType("image/*")) {//图片附件
+                    //图片附件
+                    if (multipart.getBodyPart(i).isMimeType("image/*")) {
                         InputStream is = multipart.getBodyPart(i)
                                 .getInputStream();
                         String name = multipart.getBodyPart(i).getFileName();
@@ -160,7 +175,8 @@ public class RecvEmail {
                     }
                 }
             }
-        } else if (part.isMimeType("message/rfc822")) {//多重附件，递归解析
+            //多重附件，递归解析
+        } else if (part.isMimeType("message/rfc822")) {
             getFile((Part) part.getContent());
         }
         return message;
