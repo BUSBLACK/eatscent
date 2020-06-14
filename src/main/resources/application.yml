@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/eatscent?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
@@ -18,23 +19,22 @@ spring:
     filters: stat,wall
     logSlowSql: true
 
+
   redis:
     host: 127.0.0.1
     port: 6379
     password: 123456
-    timeout: 5000
     jedis:
       pool:
-        max-active: 8
-        max-wait: -1
-        max-idle: 8
-        min-idle: 0
+        max-active: 30
+        max-idle: 10
+        max-wait: 2000
 
   mongodb:
     host: 127.0.0.1
     port: 27017
     username: cc
-    password: 123456
+    password: 1995
     databaseName: eat
 
   thymeleaf:
@@ -51,9 +51,22 @@ spring:
     username: guest
     password: guest
 
+  cache:
+    cache-names: redisCache
+    type: redis
+    redis:
+      cache-null-values: true
+      key-prefix: redisCache
+      time-to-live: 5000ms
+      use-key-prefix: true
+
+
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.example.eatscent.entity
 
 
+server:
+  port: 8080

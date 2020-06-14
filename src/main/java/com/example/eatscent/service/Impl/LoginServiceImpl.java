@@ -1,16 +1,20 @@
 package com.example.eatscent.service.Impl;
 
-import com.example.eatscent.aop.inface.emailInfoIntroduction;
+import com.example.eatscent.aop.inface.EmailInfoIntroduction;
 import com.example.eatscent.dao.UserMapper;
 import com.example.eatscent.service.LoginService;
 import com.example.eatscent.until.SendEmail;
 import com.example.eatscent.until.info.Email_info;
 import com.example.eatscent.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /**
  * @author 11397
  */
@@ -37,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public User selectById(int id) {
-        return userMapper.selectByLoginID(id);
+        return userMapper.selectByLoginId(id);
     }
 
     /**
@@ -45,8 +49,9 @@ public class LoginServiceImpl implements LoginService {
      * @param user
      */
     @Override
-    public void insertByPrimaryKey(User user) {
-        userMapper.insertByPrimaryKey(user);
+    public String insertById(User user) {
+       userMapper.insertById(user);
+       return "succ";
     }
 
     /**
@@ -72,7 +77,24 @@ public class LoginServiceImpl implements LoginService {
         email_info.setRecvEmail("1139778430@qq.com");
         email_info.setFileName("2019java面试题.pdf");
         email_info.setFilePath("D:\\BaiduNetdiskDownload");
+        //通过AOP引入，处理参数
+        EmailInfoIntroduction emailInfoIntroduction = ((EmailInfoIntroduction) sendEmail);
+        emailInfoIntroduction.sendIntroduction(email_info);
         sendEmail.Email_Send_HTML(email_info);
         return "index";
+    }
+
+    /**
+     * 修改密码
+     * @param map
+     * @return
+     */
+    @Override
+    public void exidPassword(HashMap map){
+        userMapper.updatePassword(map);
+    }
+    @Override
+    public void deleteById(int id){
+        userMapper.deleteById(id);
     }
 }

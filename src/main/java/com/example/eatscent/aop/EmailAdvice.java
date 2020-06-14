@@ -1,7 +1,5 @@
 package com.example.eatscent.aop;
 
-import com.example.eatscent.aop.inface.emailInfoIntroduction;
-import com.example.eatscent.until.info.Email_info;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;

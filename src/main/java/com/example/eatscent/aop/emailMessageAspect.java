@@ -1,6 +1,6 @@
 package com.example.eatscent.aop;
 
-import com.example.eatscent.aop.inface.emailInfoIntroduction;
+import com.example.eatscent.aop.inface.EmailInfoIntroduction;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.DeclareParents;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class emailMessageAspect {
      * defaultImpl 提供引入方法的接口实现类
      * @return
      */
-    @DeclareParents(value = "com.example.eatscent.until.SendEmail",defaultImpl = emailInfoIntroductionimpl.class  )
-    public static emailInfoIntroduction emailInfoIntroduction;
+    @DeclareParents(value = "com.example.eatscent.until.SendEmail",defaultImpl = EmailInfoIntroductionimpl.class  )
+    public static EmailInfoIntroduction emailInfoIntroduction;
 
 }

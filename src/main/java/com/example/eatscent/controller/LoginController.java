@@ -8,6 +8,6 @@ import java.util.List;
 public interface LoginController {
     List<User> getLogin(User user);
     String getLoginById(int id);
-    void insertByPrimaryKey (int user);
+    String insertById ();
     public String Hello();
 }

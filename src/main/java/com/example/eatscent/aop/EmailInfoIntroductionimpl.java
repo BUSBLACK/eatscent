@@ -1,6 +1,6 @@
 package com.example.eatscent.aop;
 
-import com.example.eatscent.aop.inface.emailInfoIntroduction;
+import com.example.eatscent.aop.inface.EmailInfoIntroduction;
 import com.example.eatscent.until.info.Email_info;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author 11397
  */
-public class emailInfoIntroductionimpl implements emailInfoIntroduction {
-    Logger logger = LoggerFactory.getLogger(emailInfoIntroductionimpl.class);
+public class EmailInfoIntroductionimpl implements EmailInfoIntroduction {
+    Logger logger = LoggerFactory.getLogger(EmailInfoIntroductionimpl.class);
     private static String ss = "\n";
     @Override
     public Email_info sendIntroduction(Email_info email_info) {

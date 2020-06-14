@@ -4,52 +4,30 @@
     <resultMap id="UserResultMap" type="com.example.eatscent.entity.User">
         <id column="UserID" jdbcType="INTEGER" property="UserID"/>
         <result column="UserName" jdbcType="VARCHAR" property="UserName"/>
-        <result column="Password" jdbcType="VARCHAR" property="Password"/>
+        <result column="userPassword" jdbcType="VARCHAR" property="Password"/>
         <result column="UserIphone" jdbcType="VARCHAR" property="UserIphone"/>
         <result column="UserAdress" jdbcType="VARCHAR" property="UserAdress"/>
         <result column="UserGread" jdbcType="VARCHAR" property="UserGread"/>
         <result column="UserComment" jdbcType="VARCHAR" property="UserComment"/>
     </resultMap>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-        delete from user
-        where id = #{id,jdbcType=INTEGER}
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from user where userid = #{id}
     </delete>
-    <insert id="insertByPrimaryKey" parameterType="com.example.eatscent.entity.User">
+    <insert id="insertById" parameterType="com.example.eatscent.entity.User">
         <selectKey keyProperty="UserID" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into user (UserID,UserName,Password,UserIphone,UserAdress,UserGread,UserComment
-        )
-        values (#{UserID},#{UserName,jdbcType=VARCHAR},#{Password,jdbcType=TIMESTAMP}, #{UserIphone,jdbcType=VARCHAR},
-        #{UserAdress,jdbcType=VARCHAR}, #{UserGread,jdbcType=VARCHAR}, #{UserComment,jdbcType=VARCHAR}
-        )
+        insert into user (UserID,UserName,userPassword,UserIphone,UserAddress,Userlevel)
+        values (#{UserID},#{UserName},#{Password}, #{UserIphone},#{UserAdress}, #{UserGread})
     </insert>
     <select id="selectByLogin" parameterType="com.example.eatscent.entity.User" resultMap="UserResultMap">
         select * from user where UserName= #{UserName,jdbcType=VARCHAR} and  Password =#{Password,jdbcType=TIMESTAMP}
     </select>
-    <update id="updateByPrimaryKey" parameterType="com.example.eatscent.entity.User">
-        update user
-        set address = #{address,jdbcType=VARCHAR},
-        createDate = #{createdate,jdbcType=TIMESTAMP},
-        email = #{email,jdbcType=VARCHAR},
-        idcard = #{idcard,jdbcType=VARCHAR},
-        imagePath = #{imagepath,jdbcType=VARCHAR},
-        mobile = #{mobile,jdbcType=VARCHAR},
-        password = #{password,jdbcType=VARCHAR},
-        realName = #{realname,jdbcType=VARCHAR},
-        sex = #{sex,jdbcType=VARCHAR},
-        type = #{type,jdbcType=INTEGER},
-        userName = #{username,jdbcType=VARCHAR},
-        description = #{description,jdbcType=VARCHAR},
-        title = #{title,jdbcType=VARCHAR},
-        bankno = #{bankno,jdbcType=VARCHAR},
-        bankpassword = #{bankpassword,jdbcType=VARCHAR},
-        cardImage = #{cardimage,jdbcType=VARCHAR},
-        lawtype = #{lawtype,jdbcType=INTEGER},
-        level = #{level,jdbcType=VARCHAR}
-    </update>
-
-    <select id="selectByLoginID" resultMap="UserResultMap">
+    <select id="selectByLoginId" resultMap="UserResultMap" >
         select * from user where UserID = #{id}
     </select>
+    <update id="updatePassword" parameterType="java.util.HashMap" >
+      update user set UserPassword = #{password} where UserID = #{id}
+    </update>
+
 </mapper>
